@@ -1,0 +1,17 @@
+[user]
+	email = djamelfel@gmail.com
+	nom = Djamel F.
+	name = Djamel F.
+[core]
+	excludesfile = ~/.global_gitignore
+	editor = vi
+[color]
+	branch = auto
+	diff = auto
+	status = auto
+	interactive = auto
+[alias]
+	st = status
+	co = checkout
+	dicc = diff --cached
+	br = branch
