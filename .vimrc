@@ -50,7 +50,6 @@ set undolevels=500
 set guioptions-=T
 set guioptions-=r
 syntax on
-set bg=dark
 set listchars=tab:▸\ ,eol:¬,trail:·
 set shortmess+=r
 set showmode
@@ -58,11 +57,6 @@ set showcmd
 set showmatch
 set t_Co=256
 colorscheme molokai
-hi ColorColumn ctermbg=234
-if has('gui_running')
-    set guifont=Menlo:h12
-    set go-=m
-endif
 set ruler
 set backspace=indent,eol,start
 set laststatus=2
