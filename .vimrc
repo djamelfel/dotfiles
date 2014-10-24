@@ -9,6 +9,8 @@ Plug 'vim-scripts/YankRing.vim'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-sleuth'
 Plug 'tomasr/molokai'
+Plug 'edkolev/tmuxline.vim'
+Plug 'bling/vim-airline'
 
 " Plugin options
 Plug 'nsf/gocode', { 'tag': 'go.weekly.2012-03-13', 'rtp': 'vim' }
@@ -18,13 +20,10 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install' }
 
 call plug#end()
 
-
 " Globals {{{
 set nocompatible
 set modelines=0
 set autoread
-" make mouse to work with gnu screen
-set ttymouse=xterm2
 set ttyfast
 set viminfo=/10,'10,r/mnt/zip,r/mnt/floppy,f0,h,\"100
 set wildmode=longest,full
@@ -33,17 +32,14 @@ set hidden
 set switchbuf=useopen
 " }}}
 
-" Backups {{{
-if v:version >= 703
-    set undofile
-    set undodir=~/.tmp/vim/undodir//,/tmp//
-else
-    let g:gundo_disable = 1
-endif
-set backupdir=~/.tmp/vim/backupdir//,/tmp//
-set directory=~/.tmp/vim/directory//,/tmp//
-set history=500
-set undolevels=500
+" Search {{{
+set hlsearch
+"set nowrap
+set shiftround
+set autoindent
+set ignorecase
+set smartcase
+set gdefault
 " }}}
 
 " User Interface {{{
@@ -61,11 +57,54 @@ set ruler
 set backspace=indent,eol,start
 set laststatus=2
 set encoding=utf-8 " Necessary to show unicode glyphs
-let g:Powerline_symbols = 'fancy' " 'fancy' needs special patched fonts
 " }}}
 
-" Tabline {{{
-set tabline=%!tabber#TabLine()
+" Backups {{{
+" reopening a file to the last position
+if has("autocmd")
+  au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+endif
+
+if v:version >= 703
+    set undofile
+    set undodir=~/.tmp/vim/undodir//,/tmp//
+else
+    let g:gundo_disable = 1
+endif
+set backupdir=~/.tmp/vim/backupdir//,/tmp//
+set directory=~/.tmp/vim/directory//,/tmp//
+set history=500
+set undolevels=500
+" }}}
+
+" Airline {{{
+let g:airline_left_sep = '▶'
+let g:airline_right_sep = '◀'
+let g:airline_theme='zenburn'
+function! AirlineInit()
+  let g:airline_section_a = airline#section#create(['mode','| |','branch'])
+  let g:airline_section_b = airline#section#create_left(['filetype'])
+  let g:airline_section_c = airline#section#create_left([''])
+  let g:airline_section_x = airline#section#create_left([''])
+  let g:airline_section_y = airline#section#create(['%P'])
+  let g:airline_section_z = airline#section#create_right(['%l','%c'])
+endfunction
+autocmd VimEnter * call AirlineInit()
+" }}}
+
+" tmuxline {{{
+let g:tmuxline_separators = {
+    \ 'left' : '▶',
+    \ 'left_alt': '|',
+    \ 'right' : '◀',
+    \ 'right_alt' : '|',
+    \ 'space' : ' '}
+let g:tmuxline_preset = {
+      \'a'    : '#S',
+      \'win'  : ['#I', '#W'],
+      \'cwin' : ['#I', '#W'],
+      \'y'    : ['%a', '%R'],
+      \'z'    : '#H'}
 " }}}
 
 " Movements {{{
@@ -80,16 +119,6 @@ let g:EasyMotion_leader_key = '<space>'
 
 " Leader {{{
 let mapleader=','
-" }}}
-
-" Search {{{
-set hlsearch
-"set nowrap
-set shiftround
-set autoindent
-set ignorecase
-set smartcase
-set gdefault
 " }}}
 
 " Yankring {{{
@@ -114,15 +143,6 @@ let g:syntastic_enable_signs=0
 let g:syntastic_javascript_gjslint_conf = "-strict --custom_jsdoc_tags=todo"
 " }}} 
 
-" Python {{{
-aug python
-    au Filetype python inoremap <silent> <buffer> <F7> import pdb; pdb.set_trace()
-    au Filetype python noremap <silent> <buffer> <F7> Oimport pdb; pdb.set_trace()<ESC>j
-    " completion is now handled by vim-jedi
-    " au FileType python setlocal omnifunc=pythoncomplete#Complete
-aug end
-" }}}
-
 " Cursorline {{{
 aug cursorline
     " Highlight the current line in the current window.
@@ -134,20 +154,7 @@ aug cursorline
 aug end
 " }}}
 
-" Special filetype conf {{{
-au FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
-au FileType coffee setlocal ts=2 sts=2 sw=2 expandtab
-au FileType html setlocal textwidth=0
-au BufNewFile,BufRead *.less setf less
-au BufNewFile,BufRead *.map setf map
-au BufNewFile,BufRead *.tmux.conf setf tmux
-au BufNewFile,BufRead *.pp setf puppet
-au BufNewFile,BufRead *.penta setf pentadactyl
-au BufNewFile,BufRead .pentadactylrc setf pentadactyl
-" }}}
-
 " Utilities {{{
-
 " Reload molokai colorscheme
 map <leader>c :colorscheme molokai<cr>
 
@@ -171,9 +178,6 @@ nmap _t :call Preserve("%!tidy -i -xml -q")<CR>
 nmap _j :SplitjoinJoin<CR>
 nmap _s :SplitjoinSplit<CR>
 
-" Order CSS properties
-nnoremap <leader>S ?{<CR>jV/}$<CR>k:sort<CR>:noh<CR>
-
 " Quicker window switching
 nnoremap <leader>, <c-w><c-w>
 
@@ -187,27 +191,7 @@ nnoremap <expr> gV '`[' . getregtype()[0] . '`]'
 " Sudo save
 cmap w!! w !sudo tee % >/dev/null
 
-" From tab to vsplit
-nnoremap <c-w>V mAZZ<c-w>v`A
-
 " Gstatus shortcut
 noremap <leader>g :Gstatus<cr>
 noremap <leader>G :Gstatus<cr>:q<cr>
-" }}}
-
-" Fast file opening {{{
-map <leader>p :CtrlP<CR>
-map <leader>P :CtrlPBuffer<CR>
-map <leader>e :CtrlPCurFile<CR>
-map <leader>t :CtrlPTag<CR>
-let g:ctrlp_user_command = ['.git/', 'cd %s && git ls-files && git ls-files -o --exclude-standard', 'find %s -type f']
-let g:ctrlp_mruf_exclude = '/tmp/.*\|.*\.git/.*'
-" Note: In some terminals, it’s not possible to remap <c-h> without also
-" changing <bs> (|key-codes|). So if pressing <bs> moves the cursor to the left
-" instead of deleting a char for you, add this to your |vimrc| to change the
-" default <c-h> mapping:
-let g:ctrlp_prompt_mappings = {
-    \ 'PrtBS()': ['<bs>', '<c-]>', '<c-h>'],
-    \ 'PrtCurLeft()': ['<left>', '<c-^>'],
-    \ }
 " }}}

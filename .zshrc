@@ -86,4 +86,3 @@ fi
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 alias tm="tmux -2"
-tm
