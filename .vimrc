@@ -93,12 +93,12 @@ let g:airline_symbols.linenr = ''
 
 let g:airline_theme='zenburn'
 function! AirlineInit()
-  let g:airline_section_a = airline#section#create(['mode ','branch'])
-  let g:airline_section_b = airline#section#create_left(['filetype'])
-  let g:airline_section_c = airline#section#create_left([''])
-  let g:airline_section_x = airline#section#create_left([''])
+  let g:airline_section_a = airline#section#create_left(['mode ','branch'])
+  let g:airline_section_b = airline#section#create(['filetype'])
+  let g:airline_section_c = airline#section#create(['%f'])
+  let g:airline_section_x = airline#section#create(['ffenc', 'hunks'])
   let g:airline_section_y = airline#section#create(['%P'])
-  let g:airline_section_z = airline#section#create_right(['%l','%c'])
+  let g:airline_section_z = airline#section#create_right(['linenr', '%c'])
 endfunction
 autocmd VimEnter * call AirlineInit()
 " }}}
@@ -151,7 +151,8 @@ endfunction
 " Syntastic {{{
 " disable signs
 let g:syntastic_enable_signs=0
-let g:syntastic_javascript_gjslint_conf = "-strict --custom_jsdoc_tags=todo"
+let g:syntastic_html_tidy_ignore_errors=[" proprietary attribute \"ng-"]
+"let g:syntastic_javascript_gjslint_conf = "-strict --custom_jsdoc_tags=todo"
 " }}} 
 
 " Cursorline {{{
@@ -204,5 +205,5 @@ cmap w!! w !sudo tee % >/dev/null
 
 " Gstatus shortcut
 noremap <leader>g :Gstatus<cr>
-noremap <leader>G :Gstatus<cr>:q<cr>
+noremap <leader>d :Gdiff<cr>
 " }}}
