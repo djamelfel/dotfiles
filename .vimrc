@@ -112,6 +112,7 @@ let g:tmuxline_separators = {
     \ 'space' : ' '}
 let g:tmuxline_preset = {
       \'a'    : '#S',
+      \'b'    : '#W',
       \'win'  : ['#I', '#W'],
       \'cwin' : ['#I', '#W'],
       \'y'    : ['%a', '%R'],
