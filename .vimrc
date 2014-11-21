@@ -1,16 +1,19 @@
 call plug#begin('~/.vim/plugged')
 
 " Make sure you use single quotes
-Plug 'kien/ctrlp.vim'
 Plug 'sjl/gundo.vim'
 Plug 'tpope/vim-fugitive'
-Plug 'scrooloose/syntastic'
+Plug 'walm/jshint.vim'
 Plug 'vim-scripts/YankRing.vim'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-sleuth'
 Plug 'tomasr/molokai'
-Plug 'edkolev/tmuxline.vim'
 Plug 'bling/vim-airline'
+Plug 'scrooloose/syntastic'
+Plug 'edkolev/tmuxline.vim'
+Plug 'kien/ctrlp.vim'
+Plug 'airblade/vim-gitgutter'
+Plug 'jmcantrell/vim-virtualenv'
 
 " Plugin options
 Plug 'nsf/gocode', { 'tag': 'go.weekly.2012-03-13', 'rtp': 'vim' }
@@ -78,6 +81,8 @@ set undolevels=500
 " }}}
 
 " Airline {{{
+let g:airline_detect_whitespace=0
+let g:airline#extensions#tabline#enabled = 1
 if !exists('g:airline_symbols')
   let g:airline_symbols = {}
 endif
@@ -87,16 +92,20 @@ let g:airline_left_sep = ''
 let g:airline_left_alt_sep = ''
 let g:airline_right_sep = ''
 let g:airline_right_alt_sep = ''
+let g:airline#extensions#tabline#left_sep = ''
+let g:airline#extensions#tabline#left_alt_sep = ''
+let g:airline#extensions#tabline#right_sep = ''
+let g:airline#extensions#tabline#right_alt_sep = ''
 let g:airline_symbols.branch = ''
 let g:airline_symbols.readonly = ''
 let g:airline_symbols.linenr = ''
 
 let g:airline_theme='zenburn'
 function! AirlineInit()
-  let g:airline_section_a = airline#section#create_left(['mode ','branch'])
+  let g:airline_section_a = airline#section#create(['mode','branch'])
   let g:airline_section_b = airline#section#create(['filetype'])
-  let g:airline_section_c = airline#section#create(['%f'])
-  let g:airline_section_x = airline#section#create(['ffenc', 'hunks'])
+  let g:airline_section_c = airline#section#create(['hunks','%f'])
+  let g:airline_section_x = airline#section#create(['virtualenv'])
   let g:airline_section_y = airline#section#create(['%P'])
   let g:airline_section_z = airline#section#create_right(['linenr', '%c'])
 endfunction
@@ -115,7 +124,7 @@ let g:tmuxline_preset = {
       \'b'    : '#W',
       \'win'  : ['#I', '#W'],
       \'cwin' : ['#I', '#W'],
-      \'y'    : ['%a', '%R'],
+      \'y'    : ['%R %x'],
       \'z'    : '#H'}
 " }}}
 
@@ -152,7 +161,11 @@ endfunction
 " Syntastic {{{
 " disable signs
 let g:syntastic_enable_signs=0
-let g:syntastic_html_tidy_ignore_errors=[" proprietary attribute \"ng-"]
+"let g:syntastic_error_symbol = '✗'
+"let g:syntastic_warning_symbol = '!'
+let g:syntastic_html_tidy_ignore_errors = [" proprietary attribute \"ng-"]
+let g:syntastic_html_tidy_ignore_errors = [" proprietary attribute \"ng-"]
+let g:syntastic_javascript_checkers = ['jshint']
 "let g:syntastic_javascript_gjslint_conf = "-strict --custom_jsdoc_tags=todo"
 " }}} 
 
