@@ -46,6 +46,9 @@ set gdefault
 " }}}
 
 " User Interface {{{
+if exists('+cc')
+  set cc=95
+endif
 set guioptions-=T
 set guioptions-=r
 syntax on
