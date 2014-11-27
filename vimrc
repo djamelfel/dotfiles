@@ -14,6 +14,7 @@ Plug 'edkolev/tmuxline.vim'
 Plug 'kien/ctrlp.vim'
 Plug 'airblade/vim-gitgutter'
 Plug 'jmcantrell/vim-virtualenv'
+Plug 'junegunn/vim-github-dashboard'
 
 " Plugin options
 Plug 'nsf/gocode', { 'tag': 'go.weekly.2012-03-13', 'rtp': 'vim' }
@@ -106,9 +107,8 @@ let g:airline_symbols.linenr = ''
 let g:airline_theme='zenburn'
 function! AirlineInit()
   let g:airline_section_a = airline#section#create(['mode','branch'])
-  let g:airline_section_b = airline#section#create(['virtualenv'])
-  "let g:airline_section_b = 
-  let g:airline_section_c = airline#section#create(['hunks','%f'])
+  let g:airline_section_b = airline#section#create('%{virtualenv#statusline()}')
+  let g:airline_section_c = airline#section#create(['hunks','%:t'])
   let g:airline_section_x = airline#section#create(['filetype'])
   let g:airline_section_y = airline#section#create(['%P'])
   let g:airline_section_z = airline#section#create_right(['linenr', '%c'])
@@ -210,6 +210,9 @@ nmap _s :SplitjoinSplit<CR>
 
 " Quicker window switching
 nnoremap <leader>, <c-w><c-w>
+
+" Close Error windows
+noremap <leader>c :lclose<cr>
 
 " ack-grep word under cursor
 let g:ackprg="ack-standalone -H --nocolor --nogroup --column --ignore-dir=buildout --ignore-dir=build"
