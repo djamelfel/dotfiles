@@ -106,9 +106,9 @@ let g:airline_symbols.linenr = ''
 
 let g:airline_theme='zenburn'
 function! AirlineInit()
-  let g:airline_section_a = airline#section#create(['mode','branch'])
+  let g:airline_section_a = airline#section#create(['mode', 'branch'])
   let g:airline_section_b = airline#section#create('%{virtualenv#statusline()}')
-  let g:airline_section_c = airline#section#create(['hunks','%:t'])
+  let g:airline_section_c = airline#section#create(['hunks', expand('%:t')])
   let g:airline_section_x = airline#section#create(['filetype'])
   let g:airline_section_y = airline#section#create(['%P'])
   let g:airline_section_z = airline#section#create_right(['linenr', '%c'])
