@@ -15,6 +15,8 @@ Plug 'kien/ctrlp.vim'
 Plug 'airblade/vim-gitgutter'
 Plug 'jmcantrell/vim-virtualenv'
 Plug 'junegunn/vim-github-dashboard'
+Plug 'cespare/vim-toml'
+Plug 'fatih/vim-go'
 
 " Plugin options
 Plug 'nsf/gocode', { 'tag': 'go.weekly.2012-03-13', 'rtp': 'vim' }
