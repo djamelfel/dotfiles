@@ -31,6 +31,7 @@ set nocompatible
 set modelines=0
 set autoread
 set ttyfast
+set number
 set viminfo=/10,'10,r/mnt/zip,r/mnt/floppy,f0,h,\"100
 set wildmode=longest,full
 set wildignore+=*.o,*.obj,.git,.svn,*.pyc
@@ -120,18 +121,18 @@ autocmd VimEnter * call AirlineInit()
 
 " tmuxline {{{
 let g:tmuxline_separators = {
-    \ 'left' : '',
-    \ 'left_alt': '',
-    \ 'right' : '',
-    \ 'right_alt' : '',
-    \ 'space' : ' '}
+  \ 'left' : '',
+  \ 'left_alt': '',
+  \ 'right' : '',
+  \ 'right_alt' : '',
+  \ 'space' : ' '}
 let g:tmuxline_preset = {
-      \'a'    : '#S',
-      \'b'    : '#W',
-      \'win'  : ['#I', '#W'],
-      \'cwin' : ['#I', '#W'],
-      \'y'    : ['%R %x'],
-      \'z'    : '#H'}
+  \'a'    : '#S',
+  \'b'    : '#W',
+  \'win'  : ['#I', '#W'],
+  \'cwin' : ['#I', '#W'],
+  \'y'    : ['%Y-%m-%d', '%H:%M'],
+  \'z'    : '#h'}
 " }}}
 
 " Movements {{{
