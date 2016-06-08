@@ -7,6 +7,7 @@ export ZSH=$HOME/.oh-my-zsh
 # time that oh-my-zsh is loaded.
 ZSH_THEME="robbyrussell"
 
+
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
 
@@ -57,6 +58,7 @@ source ~/.profile
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
  if [[ -n $SSH_CONNECTION ]]; then
@@ -139,3 +141,13 @@ elif type compctl &>/dev/null; then
   compctl -K _npm_completion npm
 fi
 ###-end-npm-completion-###
+export PATH="/usr/local/sbin:$PATH"
+
+### Use powerline
+source /usr/local/lib/python2.7/site-packages/powerline/bindings/zsh/powerline.zsh
+
+### open tmux on start
+tmux attach &> /dev/null
+if [[ ! $TERM =~ screen ]]; then
+  exec tmux
+fi

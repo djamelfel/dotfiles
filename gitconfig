@@ -1,10 +1,6 @@
-[user]
-	email = djamelfel@gmail.com
-	nom = Djamel F.
-	name = Djamel F.
 [core]
 	excludesfile = ~/.global_gitignore
-	editor = vi
+	editor = /usr/local/bin/vim
 [color]
 	branch = auto
 	diff = auto
@@ -15,3 +11,8 @@
 	co = checkout
 	dicc = diff --cached
 	br = branch
+[user]
+	name = Djamel F.
+	email = djamelfel@gmail.com
+[merge]
+	tool = vimdiff

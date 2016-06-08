@@ -8,15 +8,14 @@ Plug 'vim-scripts/YankRing.vim'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-sleuth'
 Plug 'tomasr/molokai'
-Plug 'bling/vim-airline'
 Plug 'scrooloose/syntastic'
-Plug 'edkolev/tmuxline.vim'
 Plug 'kien/ctrlp.vim'
 Plug 'airblade/vim-gitgutter'
 Plug 'jmcantrell/vim-virtualenv'
 Plug 'junegunn/vim-github-dashboard'
 Plug 'cespare/vim-toml'
 Plug 'fatih/vim-go'
+Plug 'scrooloose/nerdtree'
 
 " Plugin options
 Plug 'nsf/gocode', { 'tag': 'go.weekly.2012-03-13', 'rtp': 'vim' }
@@ -65,7 +64,9 @@ set t_Co=256
 colorscheme molokai
 set ruler
 set backspace=indent,eol,start
-set laststatus=2
+set laststatus=2 " Always display the statusline in all windows
+set showtabline=2 " Always display the tabline, even if there is only one tab
+set noshowmode " Hide the default mode text (e.g. -- INSERT -- below the statusline)
 set encoding=utf-8 " Necessary to show unicode glyphs
 " }}}
 
@@ -85,54 +86,39 @@ set backupdir=~/.tmp/vim/backupdir//,/tmp//
 set directory=~/.tmp/vim/directory//,/tmp//
 set history=500
 set undolevels=500
+noremap <C-l> :GundoToggle<cr>
 " }}}
 
 " Airline {{{
-let g:airline_detect_whitespace=0
-let g:airline#extensions#tabline#enabled = 1
-if !exists('g:airline_symbols')
-  let g:airline_symbols = {}
-endif
-
-" unicode symbols
-let g:airline_left_sep = ''
-let g:airline_left_alt_sep = ''
-let g:airline_right_sep = ''
-let g:airline_right_alt_sep = ''
-let g:airline#extensions#tabline#left_sep = ''
-let g:airline#extensions#tabline#left_alt_sep = ''
-let g:airline#extensions#tabline#right_sep = ''
-let g:airline#extensions#tabline#right_alt_sep = ''
-let g:airline_symbols.branch = ''
-let g:airline_symbols.readonly = ''
-let g:airline_symbols.linenr = ''
-
-let g:airline_theme='zenburn'
-function! AirlineInit()
-  let g:airline_section_a = airline#section#create(['mode', 'branch'])
-  let g:airline_section_b = airline#section#create('%{virtualenv#statusline()}')
-  let g:airline_section_c = airline#section#create(['hunks', expand('%:t')])
-  let g:airline_section_x = airline#section#create(['filetype'])
-  let g:airline_section_y = airline#section#create(['%P'])
-  let g:airline_section_z = airline#section#create_right(['linenr', '%c'])
-endfunction
-autocmd VimEnter * call AirlineInit()
-" }}}
-
-" tmuxline {{{
-let g:tmuxline_separators = {
-  \ 'left' : '',
-  \ 'left_alt': '',
-  \ 'right' : '',
-  \ 'right_alt' : '',
-  \ 'space' : ' '}
-let g:tmuxline_preset = {
-  \'a'    : '#S',
-  \'b'    : '#W',
-  \'win'  : ['#I', '#W'],
-  \'cwin' : ['#I', '#W'],
-  \'y'    : ['%Y-%m-%d', '%H:%M'],
-  \'z'    : '#h'}
+"let g:airline#extensions#whitespace#enabled = 1
+"let g:airline#extensions#tabline#enabled = 1
+"if !exists('g:airline_symbols')
+"  let g:airline_symbols = {}
+"endif
+"
+"" unicode symbols
+"let g:airline_left_sep = ''
+"let g:airline_left_alt_sep = ''
+"let g:airline_right_sep = ''
+"let g:airline_right_alt_sep = ''
+"let g:airline#extensions#tabline#left_sep = ''
+"let g:airline#extensions#tabline#left_alt_sep = ''
+"let g:airline#extensions#tabline#right_sep = ''
+"let g:airline#extensions#tabline#right_alt_sep = ''
+"let g:airline_symbols.branch = ''
+"let g:airline_symbols.readonly = ''
+"let g:airline_symbols.linenr = ''
+"
+"let g:airline_theme='zenburn'
+"function! AirlineInit()
+"  let g:airline_section_a = airline#section#create(['mode', 'branch'])
+"  let g:airline_section_b = airline#section#create('%{virtualenv#statusline()}')
+"  let g:airline_section_c = airline#section#create(['hunks', expand('%:t')])
+"  let g:airline_section_x = airline#section#create(['filetype'])
+"  let g:airline_section_y = airline#section#create(['%P'])
+"  let g:airline_section_z = airline#section#create_right(['linenr', '%c'])
+"endfunction
+"autocmd VimEnter * call AirlineInit()
 " }}}
 
 " Movements {{{
@@ -174,7 +160,7 @@ let g:syntastic_html_tidy_ignore_errors = [" proprietary attribute \"ng-"]
 let g:syntastic_html_tidy_ignore_errors = [" proprietary attribute \"ng-"]
 let g:syntastic_javascript_checkers = ['jshint']
 "let g:syntastic_javascript_gjslint_conf = "-strict --custom_jsdoc_tags=todo"
-" }}} 
+" }}}
 
 " Cursorline {{{
 aug cursorline
@@ -195,7 +181,7 @@ map <leader>c :colorscheme molokai<cr>
 map <leader><space> :noh<cr>:call clearmatches()<cr>
 
 " Hidden chars
-nmap <leader>l :set list!<CR>
+"nmap <leader>l :set list!<CR>
 
 " remap Y to follow same principle as C, D
 " this used to fail due to YankRing plugin: see fix in YankRing config above
@@ -215,11 +201,11 @@ nmap _s :SplitjoinSplit<CR>
 nnoremap <leader>, <c-w><c-w>
 
 " Close Error windows
-noremap <leader>c :lclose<cr>
+nnoremap <leader>c :lclose<cr>
 
 " ack-grep word under cursor
 let g:ackprg="ack-standalone -H --nocolor --nogroup --column --ignore-dir=buildout --ignore-dir=build"
-noremap <leader>a "cyiw:Ack <c-r>c<CR>
+nnoremap <leader>a "cyiw:Ack <c-r>c<CR>
 
 " Select previous selection
 nnoremap <expr> gV '`[' . getregtype()[0] . '`]'
@@ -227,7 +213,36 @@ nnoremap <expr> gV '`[' . getregtype()[0] . '`]'
 " Sudo save
 cmap w!! w !sudo tee % >/dev/null
 
+" Buffer mapping
+nnoremap <leader>n :bnext<cr>
+nnoremap <leader>p :bprevious<cr>
+
 " Gstatus shortcut
-noremap <leader>g :Gstatus<cr>
-noremap <leader>d :Gdiff<cr>
+nnoremap <leader>g :Gstatus<cr>
+nnoremap <leader>d :Gdiff<cr>
 " }}}
+
+" CtrlP {{{
+nnoremap <C-l> :CtrlPLine<cr>
+let g:ctrl_map = '<C-p>'
+let g:ctrl_cmd = 'CtrlP'
+
+"'c' - the directory of the current file.
+"'r' - the nearest ancestor that contains one of these directories or files:
+"       .git .hg .svn .bzr _darcs
+"'a' - like c, but only if the current working directory outside of CtrlP is
+"       not a direct ancestor of the directory of the current file.
+"0 or '' (empty string) - disable this feature.
+let g:ctrlp_working_path_mode = 'ra'
+
+let g:ctrlp_custom_ignore = {
+  \ 'dir': '\v[\/]\.(git|hg|svn)$',
+  \ 'file': '\v\.(exe|so|dll|DS_Store|pyc)$',
+  \ }
+" }}}
+
+" YouCompleteMe {{{
+let g:ycm_confirm_extra_conf = 0
+" }}}
+
+source /usr/local/lib/python2.7/site-packages/powerline/bindings/vim/plugin/powerline.vim
