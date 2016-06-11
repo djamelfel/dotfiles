@@ -14,15 +14,9 @@ First step install zsh if you need it and tmux
 Second step:
 	$ cp zshrc ~/.zshrc
 	$ cp tmux.conf ~/.tmux.conf
-
-* YouCompleteMe
-
-First step install YCM:
-	$ cd ~/.vim/plugged/YouCompleteMe/
-	$ ./install.sh --all
+	$ cp perso.zsh-theme .oh-my-zsh/themes/perso.zsh-theme
 
 * Powerline
 Then config powerline in that way:
 	$ pip install powerline-status
 	$ mv themes /usr/local/lib/python2.7/site-packages/powerline/config_files/themes
-
